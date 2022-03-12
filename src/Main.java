@@ -1,6 +1,8 @@
 import utils.IOUtils;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class MyThread extends Thread{
 
@@ -55,11 +57,22 @@ public class Main {
         String dest1= "c.txt";
         String dest2 =  "d.txt";
 
-        Thread t1 = new Thread(new Copy(src1,dest1));
-        t1.start();
+//        Thread t1 = new Thread(new Copy(src1,dest1));
+//        t1.start();
+//
+//        Thread t2 = new Thread(new Copy(src2,dest2));
+//        t2.start();
 
-        Thread t2 = new Thread(new Copy(src2,dest2));
-        t2.start();
+        /**
+         * Creating thread is not easy and suppose you have 100 files to copy then
+         * you can not create 100 threads so to control this we use Executer Service
+         */
+
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        executorService.execute(new Copy(src1,dest1));
+        executorService.execute(new Copy(src2,dest2));
+        System.out.println("DONE");
+        executorService.shutdown();
     }
 
 }
